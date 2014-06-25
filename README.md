@@ -1,6 +1,6 @@
-A command line alarm clock utility that uses music from your iTunes library. 
+A command line alarm clock utility that uses music from your iTunes library. Limited testing, but it should be able to work even if your computer is asleep.
 
-Only works with OSX because AppleScript is required to talk to iTunes. 
+Only works with OSX because AppleScript is required to talk to iTunes and `launchd` is required for setting up tasks.
 
 How to use
 ===
@@ -27,24 +27,37 @@ If there is exactly one result for your query, you don't need to specify an inde
 If there is more than one result, you will be shown an indexed table of the results. You will need to add an index to your command. For example,
 
 ```
-rayz:alarm-cli raymondzeng$ sudo python alarm.py 10 10 -i rain
+compooter$ sudo python alarm.py 10 10 -i rain
 Add an index at the end of your command to select a song
 index   | name                        | artist        
 ------- | --------------------------- | --------------
 0       | Set Fire To The Rain        | Adele         
-1       | Innocent                    | Our Lady Peace
-2       | Hey, Soul Sister            | Train         
-3       | Kiss The Rain               | Yiruma        
-4       | Sad Tango                   | 비 (Rain)    
-5       | Love Story (0912....그 이후) | 비 (Rain)    
-6       | But I Love You              | 비 (Rain)    
-7       | In My Bed                   | 비 (Rain)    
-8       | Move On                     | 비 (Rain)    
-rayz:alarm-cli raymondzeng$ 
-rayz:alarm-cli raymondzeng$ sudo python alarm.py 10 10 -i rain 2
+1       | Hey, Soul Sister            | Train         
+2       | Kiss The Rain               | Yiruma        
+3       | Sad Tango                   | 비 (Rain)    
+compooter$ 
+compooter$ sudo python alarm.py 10 10 -i rain 2
 ```
+When the alarm "rings", to "shut it off", just pause or stop iTunes the same way you normally would.
 
-Tested:
+How it works
+===
+1. If `-i` flag used, searches iTunes and if that process results with one song, moves on to step 2, otherwise prints stuff and quits. If `-i` flag not used, skips to step 2.
+2. Checks that you aren't setting an alarm in the past
+3. Creates a `.plist` config file to be executed by `launchd`
+4. The `.plist` stores the time to execute as well as the query and index which result in one song
+5. Makes a call to `pmset` to schedule a wakeup at the chosen time
+6. Make calls to `launchctl` to load the `.plist` file we created
+7. `alarm.py` exits  
+
+8. `pmset` is set to wake up the computer a set number of seconds before the alarm time
+9. At alarm time, `launchd` executes the `.plist` file which will call `play_itunes.py`, passing to it the query and index it stored
+10. `play_itunes.py` searches with the query and index the same way as in step 1, but this time with a `play=True` flag so after it searches, it will also tell iTunes to start playing.
+
+
+
+Testing
+===
 
 ### Battery Power
 > Settings:
