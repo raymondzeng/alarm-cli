@@ -8,14 +8,14 @@
     <key>ProgramArguments</key>
     <array>
       <string>/Users/raymondzeng/alarm-cli/play_itunes.py</string>
-      <string>house</string>
-      <string>0</string>
-      <string>06/25/14 18:26:30</string>
+      <string>@@@none@@@</string>
+      <string>@@@none@@@</string>
+      <string>06/25/14 18:45:30</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
       <key>Minute</key>
-      <integer>26</integer>
+      <integer>45</integer>
       <key>Hour</key>
       <integer>18</integer>
       <key>Day</key>

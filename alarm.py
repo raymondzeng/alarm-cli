@@ -57,8 +57,16 @@ def set_alarm(hour, minute,
     create_plist(time_now.year, time_now.month, time_now.day,
                  hour, minute, new_query, new_index, wake_string)
     try:
-        check_output(['pmset', 'schedule', 'wakeorpoweron', 
-                      wake_string, 'alarm-cli'])
+        # checks if a wake for this time already scheduled by us
+        # so we don't schedule unnecessary wakes
+        # wakes scheduled by us has 'by alarm-cli' at the end
+        sched = check_output(['pmset', '-g', 'sched'])
+        already_sched = wake_string + ' by alarm-cli' in sched
+
+        if not already_sched:
+            check_output(['pmset', 'schedule', 'wakeorpoweron', 
+                          wake_string, 'alarm-cli'])
+
         # unloads any old one
         check_output(['launchctl', 'unload', PLIST])
         # loads the new one we created with create_plist
@@ -76,7 +84,6 @@ def set_alarm(hour, minute,
     
     print s.format(**d)
 
-
 # not sure if launchd uses year and second so keeping the params
 # though not using them
 def create_plist(year, month, day, hour, minute,
@@ -86,7 +93,6 @@ def create_plist(year, month, day, hour, minute,
     template_file.close()
 
     d = {'label' : 'com.ray.alarm',
-        # 'script_path' : '/usr/local/lib/python2.7/site-packages/alarm-0.1-py2.7.egg/alarm/play_itunes.py',
          'script_path' : os.path.abspath('play_itunes.py'),
          'month' : month,
          'day' : day,
