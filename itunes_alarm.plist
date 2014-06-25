@@ -7,16 +7,16 @@
     <string>com.ray.alarm</string>
     <key>ProgramArguments</key>
     <array>
-      <string>/Users/raymondzeng/alarm-cli/alarm/play_itunes.py</string>
-      <string>sean</string>
-      <string>0</string>
+      <string>/Users/raymondzeng/alarm-cli/play_itunes.py</string>
+      <string>@@@none@@@</string>
+      <string>@@@none@@@</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
       <key>Minute</key>
-      <integer>41</integer>
+      <integer>1</integer>
       <key>Hour</key>
-      <integer>14</integer>
+      <integer>15</integer>
       <key>Day</key>
       <integer>25</integer>
       <key>Month</key>

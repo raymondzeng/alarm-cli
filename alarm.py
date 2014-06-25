@@ -1,5 +1,3 @@
-#!/usr/local/bin/python
-
 import time
 from datetime import datetime, timedelta
 import sys
@@ -49,10 +47,10 @@ def set_alarm(hour, minute,
     new_index = index
     if new_query is None:
         new_query = '@@@none@@@'
-        new_index = '@@@index@@@'
+        new_index = '@@@none@@@'
 
     create_plist(time_now.year, time_now.month, time_now.day,
-                 hour, minute, new_query, index)
+                 hour, minute, new_query, new_index)
 
      # wake up machine before alarm plays to allow ample time 
      # for launchd to get ready
@@ -60,11 +58,13 @@ def set_alarm(hour, minute,
     wake_string = wake_time.strftime('%m/%d/%y %H:%M:%S')
 
     try:
+        print PLIST
         #check_output(['pmset', 'schedule', 'wakeorpoweron', wake_string])
         # unloads any old one
         check_output(['launchctl', 'unload', PLIST])
         # loads the new one we created with create_plist
         check_output(['launchctl', 'load', PLIST])
+        #check_output(['python', 'play_itunes.py', new_query, new_index])
     except CalledProcessError, e:
         print e.output + ' Please try again'
         return

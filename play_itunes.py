@@ -16,12 +16,9 @@ def main(args):
         index = None
     else:
         index = int(index)
+
     itunes.searchPlay(query=query, index=index, play=True)
     
-    f = open('~/alarm_log', 'w')
-    f.write("ran")
-    f.close()
-
 if __name__ == "__main__":
     # always
     # play_itunes.py query index
