@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+  <dict>
+    <key>Label</key>
+    <string>$label</string>
+    <key>ProgramArguments</key>
+    <array>
+      <string>$script_path</string>
+      <string>$query</string>
+      <string>$index</string>
+    </array>
+    <key>StartCalendarInterval</key>
+    <dict>
+      <key>Minute</key>
+      <integer>$minute</integer>
+      <key>Hour</key>
+      <integer>$hour</integer>
+      <key>Day</key>
+      <integer>$day</integer>
+      <key>Month</key>
+      <integer>$month</integer>
+    </dict>
+  </dict>
+</plist>
