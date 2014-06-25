@@ -10,6 +10,7 @@
       <string>$script_path</string>
       <string>$query</string>
       <string>$index</string>
+      <string>$wake_at</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>

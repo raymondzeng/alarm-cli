@@ -49,22 +49,21 @@ def set_alarm(hour, minute,
         new_query = '@@@none@@@'
         new_index = '@@@none@@@'
 
-    create_plist(time_now.year, time_now.month, time_now.day,
-                 hour, minute, new_query, new_index)
-
      # wake up machine before alarm plays to allow ample time 
      # for launchd to get ready
     wake_time = alert_time - timedelta(0, -30)
     wake_string = wake_time.strftime('%m/%d/%y %H:%M:%S')
 
+    create_plist(time_now.year, time_now.month, time_now.day,
+                 hour, minute, new_query, new_index, wake_string)
     try:
-        print PLIST
-        check_output(['pmset', 'schedule', 'wakeorpoweron', wake_string])
+        check_output(['pmset', 'schedule', 'wakeorpoweron', 
+                      wake_string, 'alarm-cli'])
         # unloads any old one
         check_output(['launchctl', 'unload', PLIST])
         # loads the new one we created with create_plist
         check_output(['launchctl', 'load', PLIST])
-        #check_output(['python', 'play_itunes.py', new_query, new_index])
+   #     check_output(['python', 'play_itunes.py', new_query, new_index, wake_string])
     except CalledProcessError, e:
         print e.output + ' Please try again'
         return
@@ -81,7 +80,7 @@ def set_alarm(hour, minute,
 # not sure if launchd uses year and second so keeping the params
 # though not using them
 def create_plist(year, month, day, hour, minute,
-                 query, index):
+                 query, index, wake_string):
     template_file = open(os.path.join(this_dir, 'template.txt'), 'rb')
     src = string.Template(template_file.read())
     template_file.close()
@@ -94,7 +93,8 @@ def create_plist(year, month, day, hour, minute,
          'hour' : hour,
          'minute' : minute,
          'query' : query,
-         'index' : index}
+         'index' : index,
+         'wake_at' : wake_string}
 
     new_src = src.substitute(d)
     
