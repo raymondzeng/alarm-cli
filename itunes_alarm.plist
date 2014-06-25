@@ -8,13 +8,13 @@
     <key>ProgramArguments</key>
     <array>
       <string>/Users/raymondzeng/alarm-cli/play_itunes.py</string>
-      <string>some</string>
-      <string>0</string>
+      <string>rain</string>
+      <string>2</string>
     </array>
     <key>StartCalendarInterval</key>
     <dict>
       <key>Minute</key>
-      <integer>14</integer>
+      <integer>58</integer>
       <key>Hour</key>
       <integer>15</integer>
       <key>Day</key>

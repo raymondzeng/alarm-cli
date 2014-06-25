@@ -1,7 +1,0 @@
-a command line alarm clock hooked up with iTunes
-
-Only works with OSX because AppleScript.
-
-using pmset appears to wake up from computer sleep
-
-using just time.wait only works if only display is sleeping and comp. is awake
