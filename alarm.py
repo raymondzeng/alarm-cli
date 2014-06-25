@@ -59,7 +59,7 @@ def set_alarm(hour, minute,
 
     try:
         print PLIST
-        #check_output(['pmset', 'schedule', 'wakeorpoweron', wake_string])
+        check_output(['pmset', 'schedule', 'wakeorpoweron', wake_string])
         # unloads any old one
         check_output(['launchctl', 'unload', PLIST])
         # loads the new one we created with create_plist
