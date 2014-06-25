@@ -1,15 +1,15 @@
 import time
 from datetime import datetime
-from appscript import app
 import sys
-import os
-from subprocess import call
+from os import getuid
+from subprocess import check_output, CalledProcessError
 import itunes
 
-iTunes = app("iTunes")
+def set_alarm(hour, minute, sec, 
+              info='whatever your iTunes is currently playing',
+              query=None, index=None):
 
-def set_alarm(hour, minute, sec):
-    # basically an array
+    # basically a dictionary
     # [year, month, day, hour, minute, second, weekday, _, _]
     time_now = datetime.now()
 
@@ -17,25 +17,51 @@ def set_alarm(hour, minute, sec):
     alert_time = datetime(time_now.year, time_now.month, time_now.day, 
                           hour, minute, sec)
 
+
     diff = alert_time - time_now
-    diff_in_sec = diff.days * 86400 + diff.seconds
-   
-    if diff_in_sec <= 0:
+    
+    if time_now > alert_time:
         print "Can't set alarm in the past.\nCurrent time: " + time_now.strftime("%H:%M:%S")
         return
 
-    dt_string = alert_time.strftime("%m/%d/20%y %H:%M:%S")
+    dt_string = alert_time.strftime("%m/%d/%y %H:%M:%S")
+    
+    # calc hours, mins, and secs in the difference of time now and alarm
+    hours, remainder = divmod(diff.seconds, 3600)
+    mins, secs = divmod(remainder, 60)
 
-    call(["pmset", 'schedule', 'wakeorpoweron', dt_string])
-    print "[alarm]\tAlarmed scheduled for " + dt_string
+    from_now = '%d hours, %d minutes, %d seconds' % (hours, mins, secs)
 
-    time.sleep(diff_in_sec)
-    iTunes.play()
-    stop = raw_input("[alarm]\tPress any key to shutoff alarm:\n")
-    iTunes.stop()
+    try:
+        check_output(["pmset", 'schedule', 'wakeorpoweron', dt_string])
+    except CalledProcessError, e:
+        print e.output + '\nPlease try again'
+        return
+
+    s = "{head}Alarm scheduled for {dt}\n{head}in {fn}\n{head}with {song}" 
+    d = {'head' : '[alarm]\t',
+         'dt'   : dt_string, 
+         'fn'   : from_now,
+         'song' : info}
+    
+    print s.format(**d)
+
+    try: 
+        time.sleep(diff.seconds)
+    except KeyboardInterrupt:
+        print "Shutting off alarm"
+        return
+
+    itunes.searchPlay(query=query, index=index, play=True)
+
+    inp = raw_input("[alarm]\tPress any key to shutoff alarm:\n")
+    if inp == '':
+        itunes.stop()
+    else:
+        return
 
 if __name__ == "__main__":
-    if os.getuid() != 0:
+    if getuid() != 0:
         print "You must run this as root. Exiting."
     else:
         args = sys.argv
@@ -45,9 +71,24 @@ if __name__ == "__main__":
             set_alarm(ints[0], ints[1], ints[2])
         elif len(args) > 5 and args[4] == '-i':
             ints = [int(x) for x in args[1:4]]
-            # set_alarm(ints[0], ints[1], ints[2])
-            itunes.play(args[5], index=None, songs=False, 
-                        albums=False, library=True, artists=False)
+
+            if len(args) == 7:
+                index = args[6] 
+                if index.isdigit():
+                    index = int(index)
+                else:
+                    print "Index must be an integer"
+                    pass
+            else:
+                index = None
+
+            query = args[5]
+            info = itunes.searchPlay(query, index=index)
+            if info != None:
+                set_alarm(ints[0], ints[1], ints[2], 
+                          info=info, query=query, index=index)
+            else:
+                pass
         else:
-            print "Usage: "
+            print "Usage: sudo alarm <hour> <minute> <second> [-i <song> [<index>]]\n\nhour is in 24hr format\n-i optional flag followed by a query to select a song from your itunes library\nIf there is exactly one result from your query, it will be used.\nIf there is more than one, all results will be displayed and you must add an index number at the end of your query indicating which song you chose.\n\nExample: sudo alarm 17 30 0 -i Rain 2"
             
