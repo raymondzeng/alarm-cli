@@ -69,7 +69,6 @@ Testing
 Trials: 
 10 minutes (Menu Sleep)
 20 minutes (Lid closed) [warning: only plays for 5s before goes back to sleep]
-6 hours 20 minutes (Display Sleep)
 
 ### Adapter Power
 > Settings:
@@ -77,4 +76,5 @@ Trials:
 > Display Sleep 	: 11 minutes
 > Put hard drives sleep : True
 > Enable Power Nap 	: True
+
 

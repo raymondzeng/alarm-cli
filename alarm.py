@@ -47,11 +47,12 @@ def set_alarm(hour, minute,
     new_index = index
     if new_query is None:
         new_query = '@@@none@@@'
+    if new_index is None:
         new_index = '@@@none@@@'
 
      # wake up machine before alarm plays to allow ample time 
      # for launchd to get ready
-    wake_time = alert_time - timedelta(0, -30)
+    wake_time = alert_time - timedelta(0, 30)
     wake_string = wake_time.strftime('%m/%d/%y %H:%M:%S')
 
     create_plist(time_now.year, time_now.month, time_now.day,
