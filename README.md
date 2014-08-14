@@ -1,6 +1,8 @@
-A command line alarm clock utility that uses music from your iTunes library. Limited testing, but it works even if your computer is asleep. 
+Commandline Alarm Clock
+===
+A command line alarm clock utility that uses music from your iTunes library. Works even if your computer is asleep, just like an alarm clock worth its name would.
 
-Warning: If laptop lid is down and setting is to put computer to sleep if lid down, song will play for about 5 seconds and then stops. 
+Warning: If laptop lid is down and setting is to put computer to sleep if lid down, song will play for about 5 seconds and then stop.
 
 Only works with OSX because AppleScript is required to talk to iTunes and `launchd` is required for setting up tasks.
 
